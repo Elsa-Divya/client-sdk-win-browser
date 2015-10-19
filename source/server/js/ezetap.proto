@@ -1,0 +1,323 @@
+package ezetap;
+
+/**
+* ApiInput is a message representing the API input to the ezecli app
+*/
+message ApiInput {
+ required MessageType msgType = 1; /// type of API
+ optional bytes msgData = 2; /// packed data of input message of the API; For Logout, PrepareDevice and Exit APIs there are no corresponding input messages and hence this field should be initialized to NULL
+ 
+/**
+* MessageType is an enum representing the api type to the ezecli app
+*/
+ enum MessageType {
+  EXIT = 0; /// Exit from ezecli app
+  LOGIN = 1; /// Login to ezecli app
+  TXN= 2; /// Initiate a transaction
+  PREPARE_DEVICE = 3; /// Prepare the ezetap payment device
+  ATTACH_SIGNATURE = 4; /// Attach signature to an txn done earlier
+  TXN_HISTORY = 5; /// History of txns performed by the user
+  VOID_TXN = 6; /// Void any transation done earlier
+  FORWARD_RECEIPT = 7; /// Forward e-receipt to the customer
+  TXN_STATUS = 8; /// Check the status of a transaction
+  CHANGE_PASSWORD = 9; /// Change user's password
+  LOGOUT = 10; /// Logout from ezecli app
+  TXN_DETAILS = 11; /// Fetch details of a transaction
+  SERVER_TYPE =13 ;  ///Setting the server Type
+  ENABLE_DEBUG = 98;///Enable debug logging
+  DISABLE_DEBUG = 99;///Disable debug logging
+ }
+}
+/**
+* ApiOutput is a message representing the API output from the ezecli app
+*/
+message ApiOutput {
+ required EventType eventType = 1; /// Event type
+ required ResultStatus status = 2; /// Status of the result; 0 - Success; 1 - Failure
+ optional string msgText = 3; /// Text message associated with the event
+ optional bytes outData = 4; /// packed output data of the API; On Failure, it is the packed data of StatusInfo. On Success, it would correspond to the respective Output Message or will be NULL. In progress, it is the packed data of ProgressInfo
+ optional NotificationType notification = 5; /// Notification Type; applicable only when eventType is API_NOTIFICATION
+ /**
+ * ResultStatus is an enum representing the status of the API operation
+ */
+ enum ResultStatus {
+  SUCCESS = 0; /// API result is success
+  FAILURE = 1; /// API result is failure
+ }
+ /**
+ * EventType is an enum representing all result events for APIs
+ */
+ enum EventType {
+  LOGIN_RESULT = 0; /// Result Event for login api
+  LOGOUT_RESULT = 1;/// Result Event for logout api
+  TXN_RESULT = 2;/// Result Event for transaction api
+  PREPARE_DEVICE_RESULT = 3;/// Result Event for prepare device api
+  ATTACH_SIGNATURE_RESULT = 4;/// Result Event for attach signature api
+  TXN_HISTORY_RESULT = 5;/// Result Event for transaction history api
+  VOID_TXN_RESULT = 6;/// Result Event for void transaction api
+  FORWARD_RECEIPT_RESULT = 7;/// Result Event for forward receipt api
+  TXN_STATUS_RESULT = 8;/// Result Event for transaction status api
+  CHANGE_PASSWORD_RESULT = 9;/// Result Event for change password api
+  TXN_DETAILS_RESULT = 10;/// Result Event for transaction details result api
+  API_PROGRESS = 11;/// Event indicating the progress of API
+  API_NOTIFICATION = 12;/// Event indicating the notification to user while api is in progress
+  EXIT_RESULT = 99;///Event indicating exit from the library
+  SERVER_TYPE_RESULT =14; //Event indicating setting server type
+ }
+ 
+ /**
+ * NotificationType
+ */
+ enum NotificationType {
+	EPIC_IDENTIFYING_DEVICE = 1;		/// Identifying the device connected 
+    EPIC_VALIDATING_DEVICE = 2;			/// Validating device session with server 
+    EPIC_PREPARING_DEVICE = 3;			/// Preparing device 
+    EPIC_PREPARING_FOR_TXN = 4;			/// Preparing device for transaction 
+    EPIC_SWIPE_OR_INSERT_CARD = 5;		/// Indication to user to Swipe or Insert Card 
+    EPIC_READING_DATA = 6;				/// Reading data from device 
+    EPIC_TXN_IN_PROGRESS = 7;			/// Transaction is in progress 
+    EPIC_ENTER_PIN = 8;					/// Indication to user to Enter pin 
+    EPIC_PIN_ENTERED = 9;				/// Indication to user that pin is entered 
+    EPIC_SERVER_AUTH_IN_PROGRESS = 10;	/// Authorization by server is in progress 
+    EPIC_DEVICE_AUTH_IN_PROGRESS = 11;	/// Authorization by device is in progress 
+    EPIC_TXN_TERMINATED = 12;			/// Transaction Terminated 
+    EPIC_TXN_NOT_ACCEPTED = 13;			/// Transaction not Accepted 
+    EPIC_UNSUPPORTED_CARD = 14;			/// Unsupported card 
+    EPIC_CARD_NOT_SUPPORTED = 15;		/// Card is not supported 
+    EPIC_CARD_BLOCKED = 16;				/// Card is blocked 
+    EPIC_CHIP_NOT_READ = 17;			/// Chip cannot be read; indicate user to swipe the card 
+    EPIC_USE_CHIP_CARD = 18;			/// Indicate the user to use chip card reader 
+    EPIC_WRONG_PIN = 19;				/// Wrong pin is entered 
+    EPIC_PIN_METHOD_BLOCKED = 20;		/// Pin method is blocked 
+	EPIC_EXPIRED_APP = 21;				/// Application is expired 
+ }
+}
+
+/**
+* ChangePasswordInput is a message representing the input for change password API. API is used to change password for the user in session.
+*/
+message ChangePasswordInput {
+ required string currentPassword = 1;/// User's current password
+ required string newPassword = 2;///New password the user would like to use
+}
+
+/**
+* ForwardReceiptInput is a message representing the input for the forward receipt API. API is used to forward e-receipt to the customer. 
+* Please note that all transactions initiated with customer mobile/email in the input for the transaction API, would be notified by default, based on the merchant settings.
+*/
+message ForwardReceiptInput {
+ required string txnId = 1; /// Id of the transaction to be notified to the user
+ optional string customerMobile = 2;/// Mobile number of the customer
+ optional string customerEmail = 3;/// Email address of the customer
+}
+/**
+* LoginInput message represents the login message to initiate the login API of the ezecli app. API is used to create session for the user. 
+*/
+message LoginInput {
+ required LoginMode loginMode = 1;/// Mode of login
+ required string username = 2;/// Username of the user to login
+ required string passkey = 3;/// App_key or password to be used while login; App_key is the preferred mode of login. 
+ 
+ /**
+ * Loginmode is an enum representing the modes of login on the ezecli app
+ */
+ enum LoginMode {
+  PASSWORD = 0;/// Password mode; It is used to authenticate the user on Ezetap system. 
+  APPKEY = 1;/// App_Key mode; It is used to authorize the user of the merchant on the Ezetap system.
+ }
+}
+
+/**
+* LoginOutput is a message representing the output from the login API.
+*/
+message LoginOutput{
+ optional string sessionKey = 1;//Session Key of the logged in user
+ optional string settings = 2;//User/Merchant settings
+}
+
+
+
+/**
+* ProgressInfo is a message representing progress of the API
+*/
+message ProgressInfo {
+ required int32 stepsCompleted = 1; /// Steps completed so far in the API
+ required int32 totalSteps = 2; /// Total no. of steps in the API
+}
+
+
+/**
+* SignatureInput is a message representing the input for the signature API; This API is also used to accept 'Tip' for the transaction.
+*/
+message SignatureInput {
+ required string txnId = 1; ///Id of the transaction you want to sign.
+ required ImageType imageType = 2;///Type of the image captured by your application
+ required bytes imageBytes = 3;///Data of the image
+ optional int32 height = 4;///Height of the image
+ optional int32 width = 5;///Width of the image
+ optional double tipAmount = 6;///Tip amount
+
+ /**
+ * ImageType is an enum representing all the acceptable image types
+ */
+ enum ImageType {
+  PNG = 0; /// Type of th image is PNG
+  GIF = 1; /// Type of th image is GIF
+  JPEG = 2; ///Type of th image is JPEG
+  BMP = 3; ///Type of th image is BMP
+ }
+}
+
+/**
+* StatusInfo is a message representing error status from the server on API failure
+*/
+message StatusInfo {
+ required string code = 1; /// Error code sent from the server
+ required string message = 2; /// Error message sent from the server
+}
+
+
+/**
+* TxnDetailsInput is a message representing the input to the transaction details API. This API is used to fetch the details of a transaction already done.
+*/
+message TxnDetailsInput {
+ required string txnId = 1;///Id of the transaction
+}
+
+/**
+* TxnHistoryInput is a message representing the input to the transaction history API. This API is used to get this history of transactions for the current user give
+* a start date and end date. API returns a list of transaction records. The number of records to be fetched is a setting on the Ezetap Server.
+*/
+message TxnHistoryInput {
+ required string strtDate = 1;///Date from when the transactions are retrieved.
+ required string endDate = 2;///Date to when the transactions are retrieved.
+}
+
+
+/**
+* TxnHistory is a message representing the output for the transaction history API. 
+*/
+message TxnHistory {
+ required int32 totalCount = 1; ///Total num of records fetched
+ required double netAmount = 2; ///Net amount of the fetched transactions
+ required int32 summaryItemCount = 3;///Summary Item count
+ /**
+ * SummaryItem is a message representing the transaction status summary of all the transactions i.e., How many transactions are authorized? What is the net amount of voided transactions? etc
+ */
+ message SummaryItem {
+  required string title = 1;/// Title of the status summary. "Authorized", "Voided" are some example values
+  required int32 count = 2; /// Number of transactions
+  required double amount = 3;///Net amount of the transactions in this group
+ }
+ 
+ repeated SummaryItem summaryItems = 4;///List of SummaryItem's
+ repeated Txn txns = 5;///List of Transactions
+ }
+
+
+/**
+* TxnInput is a message representing the input to the transaction API. This API is used to initiate a transaction on the Ezetap Payment when you want to accept a payment.
+*/
+message TxnInput {
+ required TxnType txnType = 1;///Type of the transaction
+ required double amount = 2;///Amount for the transaction
+ optional string orderId = 3;///Order Id corresponding to the transaction
+ optional string nonce = 4;///Unique identifier for the transaction on the client app.
+ optional string customerMobile = 5;///Mobile number of the transaction
+ optional string customerEmail = 6;///Email address of the transaction
+ optional string externalReference2 = 7;///External reference 2
+ optional string externalReference3 = 8;///External reference 3
+ optional double amountOther = 9;///Other Amount; In case of cash back transactions. 
+ optional string chequeNumber = 10;///Cheque number if the transaction type is CHEQUE
+ optional string bankCode = 11;///MICR code of the bank for CHEQUE payments
+ optional string chequeDate = 12;///Date on the cheque for CHEQUE payments
+ optional string additionalData = 13;///Any additional JSON data to be appended to the transaction input 
+ optional string receipt_type = 14;///Type of receipt. Ex: eSignature, paper, receipt_cart
+
+ /**
+ * TxnType is an enum representing all available types of transaction
+ */
+ enum TxnType{
+  CARD_AUTH = 0;///Transaction with CARD
+  CARD_PRE_AUTH = 1;///Transaction with CARD and PRE_AUTH
+  CARD_PRE_AUTH_CONF = 2;///Transaction with CARD and PRE_AUTH confirmation
+  CASH = 3;///Cash transaction
+  CHEQUE = 4;///Cheque transcation
+ }
+}
+
+/**
+* Txn is a message representing the output of the transaction API. 
+*/
+message Txn {
+required TxnType txnType = 1;///Type of the transaction
+required double amount = 2;///Amount for the transaction
+required string transactionId = 3;///ID of the transaction
+required string timestamp = 4;///Datetime of the transaction                                                 
+required string receiptUrl = 5;///Short URL of the transaction to retrieve receipt                                                         
+required string orderId = 6;///Order ID of the transaction
+required string externalReferenceNumber2 = 7;///External reference 2
+required string externalReferenceNumber3 = 8;///External reference 3
+required string customerMobileNumber = 9;///Mobile number of the customer 
+required string customerName = 10;///Name of the customer            
+required string status = 11;///Status of the transaction  
+optional string userAgreement = 12;///Bank's user agreement 
+optional string authCode = 13;///Auth code of the transaction
+optional string lastFoundDigits = 14;///Last four digits of the card
+optional string cardBrand = 15;///Brand of the card i.e., VISA, RUPAY etc
+optional string invoiceNumber = 16;///Invoice number of the transaction
+optional string batchNumber = 17;///Batch number of the transaction
+optional string mid = 18;///MID of the transaction
+optional string tid = 19;///TID of the terminal on which the transaction happened
+optional string reverseRefNumber = 20;///Reverse ref num of the transaction
+optional string chequeNumber = 21;///Cheque number 
+optional string bankCode = 22;///MICR code of the bank
+optional string chequeDate = 23;///Date on the cheque
+optional string settlementStatus = 24;///Settlement status of the transaction
+optional bool voidable = 25;///Boolean denotes if the transaction is voidable
+
+optional string serverResponse = 26;///Server response- as is. Please refer server api-docs. 
+
+ /**
+ * TxnType is an enum representing all available types of transaction
+ */
+ enum TxnType{
+  CARD_AUTH = 0;///Transaction with CARD
+  CARD_PRE_AUTH = 1;///Transaction with CARD and PRE_AUTH
+  CARD_PRE_AUTH_CONF = 2;///Transaction with CARD and PRE_AUTH confirmation
+  CASH = 3;///Cash transaction
+  CHEQUE = 4;///Cheque transcation
+ }
+}
+
+
+/**
+* TxnStatusInput is a message representing the input to the transaction details API. This API is used to check the status of the transaction.
+* Example scenario: You initiate a transaction and the network fails. You can use this API to see if the transaction succeeded on the Ezetap Server.
+*/
+message TxnStatusInput {
+ required string nonce = 1;///nonce of the transaction. This is a unique identifier generated by the calling app to identify the transaction initiated and is used to check on the transaction.
+}
+
+/**
+* VoidTxnInput is a message representing the input for the void transaction API. This API is used to void a unsettled transaction that you performed on the system.
+*/
+message VoidTxnInput {
+ required string txnId = 1;///Id of the transaction
+}
+
+/** Server Type Message 
+*/
+message ServerTypeInput {
+ required ServerType serverType = 1;/// Server Typw
+ 
+ /**
+ * ServerTypeInput is an enum representing the type of Server on the ezecli app for connecting
+ */
+ enum ServerType {
+  DEMO = 0;/// DEMO mode; It is used to connect with Demo server. 
+  PROD = 1;/// PROD mode; It is used to connect with Production server.
+ }
+}
+
+
