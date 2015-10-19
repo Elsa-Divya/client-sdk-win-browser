@@ -48,29 +48,23 @@ app.get(baseUrl+'/close',function(req,res){
 	});
 });
 
-app.post(baseUrl+'/payCard',function(req,res){
+app.post(baseUrl+'/cardTransaction',function(req,res){
 	var reqBody=req.body;
 	ezetapRestImpl.payCard(reqBody.amount,reqBody.mode,reqBody.options,function(status,data){
 		sendResponse(res,status,data);
 	});
 });
 
-app.post(baseUrl+'/payCash',function(req,res){
+app.post(baseUrl+'/cashTransaction',function(req,res){
 	var reqBody=req.body;
 	ezetapRestImpl.payCash(reqBody.amount,reqBody.options,function(status,data){
 		sendResponse(res,status,data);
 	});
 });
 
-app.post(baseUrl+'/payCheque',function(req,res){
+app.post(baseUrl+'/chequeTransaction',function(req,res){
 	var reqBody=req.body;
 	ezetapRestImpl.payCheque(reqBody.amount,reqBody.cheque,reqBody.options,function(status,data){
-		sendResponse(res,status,data);
-	});
-});
-
-app.get(baseUrl+'/txnStatus/:id',function(req,res){
-	ezetapRestImpl.checkTxnStatus(req.params.id,function(status,data){
 		sendResponse(res,status,data);
 	});
 });

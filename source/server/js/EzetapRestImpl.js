@@ -368,8 +368,9 @@ function EzetapRestImplTest(eze){
 					"paymentMode":"paymentMode",
 					"authCode":"authCode",
 					"deviceSerial":"deviceSerial",
-					"mid":"mid",
-					"tid":"tid"
+					"mid":"mid", 
+					"tid":"tid",
+					"settlementStatus":"status"
 				}
 				var customerMapper={
 					"customerEmail":"email",
@@ -380,9 +381,16 @@ function EzetapRestImplTest(eze){
 					"customerReceiptUrl":"receiptUrl",
 					"readableChargeSlipDate":"receiptDate"
 				}
+
+				var references={
+					"externalRefNumber":"primaryRef",
+					"externalRefNumber2":"ref2",
+					"externalRefNumber3":"ref3"
+				}
+				
 		for(var property in txnMapper){
 			if(txnMapper.hasOwnProperty(property)){
-				if(obj[property]!=null){
+				if(obj[property]!=null && obj[property]!=""){
 					var str=property;
 					temp[txnMapper[property]]=obj[property];
 				}
@@ -391,9 +399,20 @@ function EzetapRestImplTest(eze){
 		obj_temp.txn=temp;
 		temp={};
 
+		for(var property in references){
+			if(references.hasOwnProperty(property)){
+				if(obj[property]!=null && obj[property]!=""){
+					var str=property;
+					temp[references[property]]=obj[property];
+				}
+			}
+		}
+		obj_temp.references=temp;
+		temp={};
+
 		for(var property in customerMapper){
 			if(customerMapper.hasOwnProperty(property)){
-				if(obj[property]!=null){
+				if(obj[property]!=null && obj[property]!=""){
 					var str=property;
 					temp[customerMapper[property]]=obj[property];
 				}
@@ -403,7 +422,7 @@ function EzetapRestImplTest(eze){
 		temp={};
 		for(var property in receiptMapper){
 			if(receiptMapper.hasOwnProperty(property)){
-				if(obj[property]!=null){
+				if(obj[property]!=null && obj[property]!=""){
 					var str=property;
 					temp[receiptMapper[property]]=obj[property];
 				}
@@ -414,12 +433,12 @@ function EzetapRestImplTest(eze){
 		
 		if("card"===type){
 			var cardMapper={
-				"maskedCardNumber":"maskedCardNo",
+				"formattedPan":"maskedCardNo",
 				"paymentCardBrand":"cardBrand"
 			}
 			for(var property in cardMapper){
 				if(cardMapper.hasOwnProperty(property)){
-					if(obj[property]!=null){
+					if(obj[property]!=null && obj[property]!=""){
 						var str=property;
 						temp[cardMapper[property]]=obj[property];
 					}
@@ -434,7 +453,7 @@ function EzetapRestImplTest(eze){
 			}
 			for(var property in merchantMapper){
 				if(merchantMapper.hasOwnProperty(property)){
-					if(obj[property]!=null){
+					if(obj[property]!=null && obj[property]!=""){
 						var str=property;
 						temp[merchantMapper[property]]=obj[property];
 					}
@@ -451,7 +470,7 @@ function EzetapRestImplTest(eze){
 			}
 			for(var property in chequeMapper){
 				if(chequeMapper.hasOwnProperty(property)){
-					if(obj[property]!=null){
+					if(obj[property]!=null && obj[property]!=""){
 						var str=property;
 						temp[chequeMapper[property]]=obj[property];
 					}

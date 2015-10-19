@@ -7,13 +7,15 @@ function EzecliWrapper(eze){
 		try{
 			
 			eze.preparedevice(function(apio){
-				console.log('Executing function')
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
 					deferred.resolve(apio);
-				}else{
-					console.log('Executing else function')
-					deferred.reject(apio);
-				}
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
+				}		
 					
 			});
 		}catch(e){
@@ -28,10 +30,14 @@ function EzecliWrapper(eze){
 		var deferred=Q.defer();
 		try{
 			eze.login(username,password,loginmode,function(apio){
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
-					deferred.resolve(apio);
-				}else{
-					deferred.reject(apio);
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+						deferred.resolve(apio);
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
 				}
 					
 			});
@@ -48,12 +54,15 @@ function EzecliWrapper(eze){
 		try{
 			
 			eze.logout(function(apio){
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
 					deferred.resolve(apio);
-				}else{
-					deferred.reject(apio);
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
 				}
-					
 			});
 		}catch(e){
 			deferred.reject();
@@ -78,12 +87,15 @@ function EzecliWrapper(eze){
 		var deferred=Q.defer();
 		try{
 			eze.paycard(amount,options,function(apio){
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
 					deferred.resolve(apio);
-				}else{
-					deferred.reject(apio);
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
 				}
-					
 			});
 		}catch(e){
 			deferred.reject();
@@ -96,12 +108,15 @@ function EzecliWrapper(eze){
 		var deferred=Q.defer();
 		try{
 			eze.paycardCash(amount,otherAmount,options,function(apio){
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
 					deferred.resolve(apio);
-				}else{
-					deferred.reject(apio);
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
 				}
-					
 			});
 		}catch(e){
 			deferred.reject();
@@ -116,12 +131,15 @@ function EzecliWrapper(eze){
 		try{
 
 			eze.paycash(amount,options,function(apio){
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
 					deferred.resolve(apio);
-				}else{
-					deferred.reject(apio);
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
 				}
-					
 			});
 		}catch(e){
 			deferred.reject();
@@ -136,12 +154,15 @@ function EzecliWrapper(eze){
 		try{
 
 			eze.paycheque(amount,options,function(apio){
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
 					deferred.resolve(apio);
-				}else{
-					deferred.reject(apio);
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
 				}
-					
 			});
 		}catch(e){
 			deferred.reject();
@@ -156,12 +177,15 @@ function EzecliWrapper(eze){
 		try{
 
 			eze.txnvoid(txnId,function(apio){
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
 					deferred.resolve(apio);
-				}else{
-					deferred.reject(apio);
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
 				}
-					
 			});
 		}catch(e){
 			deferred.reject();
@@ -176,12 +200,15 @@ function EzecliWrapper(eze){
 		try{
 			
 			eze.forwardreceipt(txnId,mobile,email,function(apio){
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
 					deferred.resolve(apio);
-				}else{
-					deferred.reject(apio);
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
 				}
-					
 			});
 		}catch(e){
 			deferred.reject();
@@ -195,12 +222,15 @@ function EzecliWrapper(eze){
 		try{
 			
 			eze.txndetail(txnId,function(apio){
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
 					deferred.resolve(apio);
-				}else{
-					deferred.reject(apio);
-				}
-					
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
+				}	
 			});
 		}catch(e){
 			deferred.reject();
@@ -214,13 +244,15 @@ function EzecliWrapper(eze){
 		try{
 			
 			eze.txnhistory(startDate,endDate,function(apio){
-				console.log('Got the result')
-				if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
 					deferred.resolve(apio);
-				}else{
-					deferred.reject(apio);
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
 				}
-					
 			});
 		}catch(e){
 			deferred.reject();
