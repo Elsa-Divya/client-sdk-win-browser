@@ -9,7 +9,7 @@ There are 3 components involved :-
 2. Server(NodeJS)
 3. Driver(Ezetap Device)
 
-Ezetap Server (NodeJS) hosts a bunch of REST APIs to communicate with the Ezetap driver, these REST APIs can be used directly or through JS APIs. 
+Ezetap Server (NodeJS) hosts a bunch of REST APIs to communicate with the Ezetap device, these REST APIs can be used directly or through JS APIs. 
 
 ## Getting Started
 1. Download ````Server.zip```` and ````EzeAPI.js```` from the release section.
