@@ -47,7 +47,7 @@ You can include ````EzeAPI.js```` in your project and start calling the APIs. Fo
 
 
 ##REST
-You can also call REST services directly from your project. For ````REST```` ,please refer to <a "http://developers.ezetap.com/api/?conf#initialize">REST API Docs</a>
+You can also call REST services directly from your project. For ````REST```` ,please refer to <a href="http://developers.ezetap.com/api/?conf#initialize">REST API Docs</a>
 
 ##Sample Web Application
 There is a sample Web application inside the sample folder of the repository. You can use this project as a reference to integrate Ezetap SDK.
