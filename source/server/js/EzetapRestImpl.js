@@ -36,7 +36,6 @@ function EzetapRestImplTest(eze){
 				fn(200,responseObj("SUCCESS",null,{"message":"Initialization Successfull"}));
 			})
 			.catch(function(apio){
-					console.log('in catch clause')
 					try{
 						if(apio!=undefined){
 							var error=eze.model.StatusInfo.decode(apio.outData);
