@@ -148,8 +148,10 @@
           }
           data.copy(buf,0,4,4+len);
           var apio = thi.model.ApiOutput.decode(buf);
+		      
           thi.log('[OUT] event type ' + apio.eventType);	
           thi.ezeclibusy = 0;
+		 
   		if(apio.status == thi.model.ApiOutput.ResultStatus.FAILURE) { 
   			var si = thi.model.StatusInfo.decode(apio.outData);
   			apio = thi.model.ApiOutput.decode(buf);
@@ -158,6 +160,7 @@
   			}
   		}
   		//fs.writeFile('logFile',JSON.stringify(apio.outData));
+		 
           switch(apio.eventType) {
             case thi.model.ApiOutput.EventType.LOGIN_RESULT:
               thi.User.isAuthenticated   = true;
@@ -210,13 +213,18 @@
             case thi.model.ApiOutput.EventType.TXN_HISTORY_RESULT:
               if(thi.fn) thi.fn(apio);
               break;
+			case thi.model.ApiOutput.EventType.SERVER_TYPE_RESULT:
+              if(thi.fn){
+                  thi.fn(apio);
+              } 
+              break;
             case thi.model.ApiOutput.EventType.TXN_DETAILS_RESULT:
               if(thi.fn) thi.fn(apio);
               break;
             case thi.model.ApiOutput.EventType.VOID_TXN_RESULT:
               if(thi.fn) thi.fn(apio);
               break;
-  		  case thi.model.ApiOutput.EventType.ATTACH_SIGNATURE_RESULT:
+  		      case thi.model.ApiOutput.EventType.ATTACH_SIGNATURE_RESULT:
               if(thi.fn) thi.fn(apio);
               break;
             case thi.model.ApiOutput.EventType.EXIT_RESULT:
@@ -231,6 +239,7 @@
             case thi.model.ApiOutput.EventType.FORWARD_RECEIPT_RESULT:
               if(thi.fn) thi.fn(apio);
               break;
+            
             /*case thi.model.ApiOutput.EventType.API_PROGRESS:
               var si = thi.model.ProgressInfo.decode(apio.outData);
               if (8 == si.totalSteps) {
@@ -494,6 +503,14 @@
         thi.cliapi(thi.model.ApiInput.MessageType.PREPARE_DEVICE, null);
       }
     };
+
+    this.setServerType = function(serverType,fn) {   
+    thi.fn = fn;
+    var si = new thi.model.ServerTypeInput({
+        'serverType' : serverType
+    });
+    thi.cliapi(thi.model.ApiInput.MessageType.SERVER_TYPE, si.encode());
+  };
 
     this.stop = function() {
       if (!thi.child) return;

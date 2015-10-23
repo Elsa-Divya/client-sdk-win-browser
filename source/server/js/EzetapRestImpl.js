@@ -10,42 +10,53 @@ function EzetapRestImplTest(eze){
 	var ezecliWrapper=require('./EzecliPromiseWrapper').EzecliWrapper(eze);
 	thi.initialize=function(ezetapConfig,fn){
 		var appKey="";
+		var appMode=0;
 		try{
 			eze.setdriver(ezecliLocation);
 			eze.start();
 			if(ezetapConfig.appMode==="PROD"){
 				appKey=ezetapConfig.prodAppKey;
+				appMode=1;
 			}else{
 				appKey=ezetapConfig.demoAppKey;
+				appMode=0;
 			}
-			ezecliWrapper.login(ezetapConfig.username,appKey,1)
-			.then(ezecliWrapper.prepareDevice)
+			if(isInitialized){
+				return thi.prepareDevice(fn);
+			}
+			ezecliWrapper.setServerType(appMode)
+			.then(function(){
+				return ezecliWrapper.login(ezetapConfig.username,appKey,1);
+			})
+			.then(function(){
+				isInitialized=true;
+				return ezecliWrapper.prepareDevice();
+			})
 			.then(function(){
 				fn(200,responseObj("SUCCESS",null,{"message":"Initialization Successfull"}));
 			})
 			.catch(function(apio){
-				try{
-					if(apio!=undefined){
-						var error=eze.model.StatusInfo.decode(apio.outData);
-						if(error.message.indexOf("logged in")!=-1){
-							thi.prepareDevice(fn);
+					console.log('in catch clause')
+					try{
+						if(apio!=undefined){
+							var error=eze.model.StatusInfo.decode(apio.outData);
+							if(error.message.indexOf("logged in")!=-1){
+								thi.prepareDevice(fn);
+							}else{
+								fn(500,responseObj("FAILURE",errorObj(error.code,error.message),null));
+							}
+							
 						}else{
-							fn(500,responseObj("FAILURE",errorObj(error.code,error.message),null));
+							fn(500,responseObj("FAILURE",errorObj("EZECLI_0001","Exception occured. Contact Ezetap Support!!!"),null));
 						}
-						
-					}else{
+					}catch(e){
 						fn(500,responseObj("FAILURE",errorObj("EZECLI_0001","Exception occured. Contact Ezetap Support!!!"),null));
 					}
-				}catch(e){
-					fn(500,responseObj("FAILURE",errorObj("EZECLI_0001","Exception occured. Contact Ezetap Support!!!"),null));
-				}
-			})
+				})
+			
 		}catch(e){
-			fn(500,responseObj("FAILURE",errorObj("EZECLI_0001","Exception occured. Contact Ezetap Support!!!"),null));
+				fn(500,responseObj("FAILURE",errorObj("EZECLI_0001","Exception occured. Contact Ezetap Support!!!"),null));
 		}
-
-
-		
 	}
 
 	thi.prepareDevice=function(fn){
@@ -82,7 +93,10 @@ function EzetapRestImplTest(eze){
 		try{
 			if(eze.User.isAuthenticated){
 				ezecliWrapper.logout()
-				.then(ezecliWrapper.stop)
+				.then(function(){
+					isInitialized=false;
+					return ezecliWrapper.stop();
+				})
 				.then(function(){
 					fn(200,responseObj("SUCCESS",null,{"message":"Ezecli Closed"}));
 				})

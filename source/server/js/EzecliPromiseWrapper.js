@@ -260,6 +260,27 @@ function EzecliWrapper(eze){
 		
 		return deferred.promise;
 	}
+
+	that.setServerType=function(serverType){
+		var deferred=Q.defer();
+		try{	
+			eze.setServerType(serverType,function(apio){
+				try{
+					if(eze.model.ApiOutput.ResultStatus.SUCCESS == apio.status){
+						deferred.resolve(apio);
+					}else{
+						deferred.reject(apio);
+					}
+				}catch(e){
+					deferred.reject();
+				}
+			});
+		}catch(e){
+			deferred.reject();
+		}
+		
+		return deferred.promise;
+	}
 }
 
 module.exports = {
