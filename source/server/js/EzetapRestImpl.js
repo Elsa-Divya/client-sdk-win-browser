@@ -37,6 +37,13 @@ function EzetapRestImplTest(eze){
 			})
 			.catch(function(apio){
 					try{
+						if(isInitialized){
+							ezecliWrapper.logout()
+							.then(function(){
+								isInitialized=false;
+								return ezecliWrapper.stop()
+							})
+						}
 						if(apio!=undefined){
 							var error=eze.model.StatusInfo.decode(apio.outData);
 							if(error.message.indexOf("logged in")!=-1){
