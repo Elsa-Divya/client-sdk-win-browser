@@ -65,8 +65,11 @@ function(window){
 		EzeAPI.searchTransactions=function(startDate,endDate,ezetapResponseHandler){
 			wsCaller.doGetCall(baseUrl+port.httpPort+"/ezetap/v1/searchTransaction?startDate="+startDate+"&endDate="+endDate,ezetapResponseHandler);
 		}
-		EzeAPI.payCharge=function(chargeObj,ezetapResponseHandler){
-			wsCaller.doPostCall(baseUrl+port.httpPort+"/ezetap/v1/takeChargePayment",chargeObj,ezetapResponseHandler);
+		EzeAPI.cardPayment=function(chargeObj,ezetapResponseHandler){
+			wsCaller.doPostCall(baseUrl+port.httpPort+"/ezetap/v1/takeCardPayment",chargeObj,ezetapResponseHandler);
+		}
+		EzeAPI.cashPayment=function(chargeObj,ezetapResponseHandler){
+			wsCaller.doPostCall(baseUrl+port.httpPort+"/ezetap/v1/takeCashPayment",chargeObj,ezetapResponseHandler);
 		}
 		return EzeAPI;
 	}
