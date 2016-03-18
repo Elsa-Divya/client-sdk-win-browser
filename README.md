@@ -16,6 +16,10 @@ Ezetap Server (NodeJS) hosts a bunch of REST APIs to communicate with the Ezetap
 2. Ezetap app key (Demo/Prod keys)
 3. Windows compatible Ezetap Device 
 
+##Prerequisites
+1. Download Node Server from Releases folder (node_server->node-v4.4.0-x64.msi), Double click and follow the instructions to install.
+
+2. After node Installation, open script folder and Double click on install.bat.
 
 ##Server Setup
 First start the server, to start **Ezetap** server unzip ````server.zip```` and double click on **Ezetap.exe**. This will start up a cli interface displaying a server start message.
