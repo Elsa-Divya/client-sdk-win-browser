@@ -22,7 +22,7 @@ Ezetap Server (NodeJS) hosts a bunch of REST APIs to communicate with the Ezetap
 2. After node Installation, open script folder and Double click on install.bat.
 
 ##Server Setup
-First start the server, to start **Ezetap** server unzip ````server.zip```` and double click on **Ezetap.exe**. This will start up a cli interface displaying a server start message.
+First start the server, to start **Ezetap** server unzip ````server.zip```` and double click on **Ezetap.exe**. This will start up a cli interface.
 
 By default, Ezetap Server runs on 8081 port <a>http://localhost:8081</a>, it also makes use of <a href="https://en.wikipedia.org/wiki/WebSocket">WebSockets</a> to push **Notifications** from Device, by default websocket pushes to **1337** port. Both these ports are configurable.
 
